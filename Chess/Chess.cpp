@@ -2,6 +2,7 @@
 #include <string>
 using namespace std;
 
+//Declaring pieces
 enum piece {
 	none,
 	king,
@@ -32,6 +33,7 @@ void Board() {
 	board[7][5] = bishop;
 	board[7][6] = knight;
 	board[7][7] = rook;
+	//Loop for declaring the pawns
 	for (int i = 0; i < 8; i++) {
 		board[1][i] = pawn;
 		board[6][i] = pawn;
@@ -39,10 +41,9 @@ void Board() {
 	}
 
 }
-
-
+//Function for validating the moves of the pieces
 bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
-
+//Getting the absolute value of the valid positions 
 	int xValid = abs(xFrom - xTo);
 	int yValid = abs(yFrom - yTo);
 	int yValidR = abs(yFrom - yTo);
@@ -54,7 +55,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 	case none:
 		break;
 	case king:
-
+		//King::Valid X and valid Y must not me bigger then 1, and the valid new position must be empty
 		if (xValid < 2 && yValid < 2 && board[xTo][yTo] == none) {
 			peice = board[xTo][yTo];
 			return true;
@@ -76,12 +77,14 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 
 		break;
 	case rook:
-		
+		//Rook::X must be the same as the new X, same for Y
 		if (xFrom != xTo && yFrom != yTo) {
 			return false;
 		}
+		//Move for X
 		if (yFrom == yTo) {
 			int directionX = xTo - xFrom;
+			//Move up or down
 			if (directionX < 0) {
 				for (int i = 1; i < xValidR;i++) {
 					valid = peice = board[xFrom - i][yFrom];
@@ -100,13 +103,13 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			}
 		}
 		else {
-			if (yTo == yTo) {
 				int directionY = yTo - yFrom;
+				//Move left and right
 				if (directionY > 0) {
 					for (int i = 1; i < yValidR; i++) {
 						valid = peice = board[xFrom][yFrom + i];
-						if (!valid) {
-							return false;
+ 						if (!valid) {
+ 							return false;
 						}
 					}
 				}
@@ -114,11 +117,11 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 					for (int i = 1; i < yValidR; i++) {
 						valid = peice = board[xFrom][yFrom - i];
 						if (!valid) {
-							return false;
+						return false;
 						}
+
 					}
 				}
-			}
 		}
 		break;
 	default:
@@ -130,9 +133,11 @@ int main() {
 	string input;
 	Board();
 	cout << "Move: ";	cin >> input;
+	//Input validation
 	if (input.length() != 5) {
 		cout << "Invalid input";
 	}
+	//Conversion from ASII to Numbers
 	else {
 		if ((!isdigit(input[0])) && !isdigit(input[3])) {
 			if ((isdigit(input[1])) && isdigit(input[4])) {
