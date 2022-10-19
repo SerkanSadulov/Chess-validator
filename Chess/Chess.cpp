@@ -45,8 +45,9 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 
 	int xValid = abs(xFrom - xTo);
 	int yValid = abs(yFrom - yTo);
-
-
+	int yValidR = abs(yFrom - yTo);
+	int xValidR = abs(xFrom - xTo);
+	bool valid = true;
 	piece peice = board[xFrom][yFrom];
 
 	switch (peice) {
@@ -75,11 +76,50 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 
 		break;
 	case rook:
-
-
-
-
-
+		
+		if (xFrom != xTo && yFrom != yTo) {
+			return false;
+		}
+		if (yFrom == yTo) {
+			int directionX = xTo - xFrom;
+			if (directionX < 0) {
+				for (int i = 1; i < xValidR;i++) {
+					valid = peice = board[xFrom - i][yFrom];
+					if (!valid) {
+						return false;
+					}
+				}
+			}
+			else {
+				for (int i = 1; i < xValidR ;i++) {
+					valid = peice = board[xFrom + i][yTo]; 
+					if (!valid) {
+						return false;
+					}
+				}
+			}
+		}
+		else {
+			if (yTo == yTo) {
+				int directionY = yTo - yFrom;
+				if (directionY > 0) {
+					for (int i = 1; i < yValidR; i++) {
+						valid = peice = board[xFrom][yFrom + i];
+						if (!valid) {
+							return false;
+						}
+					}
+				}
+				else {
+					for (int i = 1; i < yValidR; i++) {
+						valid = peice = board[xFrom][yFrom - i];
+						if (!valid) {
+							return false;
+						}
+					}
+				}
+			}
+		}
 		break;
 	default:
 		break;
