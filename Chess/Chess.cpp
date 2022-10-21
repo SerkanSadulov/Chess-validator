@@ -161,6 +161,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 		//King move validation
 		if (xValid < 2 && yValid < 2 && board[xTo][yTo] == none) {
 			peice = board[xTo][yTo];
+			board[xFrom][yFrom] = none;
 			return true;
 		}
 		else return false;
@@ -168,150 +169,122 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 
 		break;
 	case queen:
-		if (board[xTo][yTo] == none && (yFrom - yTo == xFrom - xTo) || (yFrom - yTo == xTo - xFrom)) {
-			for (int i = 1; i < xValidB && yValidB; i++) {
-				//Liner move
-				valid = peice = board[xTo][yTo];
-				if (!valid) {
+		//Queen validation
+		if (board[xTo][yTo] == none && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
+			// Checking if there is something in the way
+			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
+			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
+			int checkX;
+			int checkY;
+			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;
+				checkX != xFrom;
+				checkX = checkX + xOffSet, checkY = checkY + yOffSet)
+			{
+				if (board[checkX][checkY] != none) {
 					return false;
 				}
 			}
-
+			return true;
 		}
-		else return false;
-		if (xFrom != xTo && yFrom != yTo) {
-			return false;
-		}
-		//Move for X
-		if (board[xTo][yTo] == none && yFrom == yTo) {
-			int directionX = xTo - xFrom;
-			//Move up or down
-			if (directionX < 0) {
-				for (int i = 1; i < xValidR; i++) {
-					valid = peice = board[xFrom - i][yFrom];
-					if (!valid) {
-						return false;
-					}
+		if (xFrom == xTo && board[xTo][yTo] == none) {
+			// Checking if there is something in the way
+			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
+			for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
+				if (board[xTo][checkY] != none) {
+					return false;
 				}
 			}
-			else {
-				for (int i = 1; i < xValidR; i++) {
-					valid = peice = board[xFrom + i][yTo];
-					if (!valid) {
-						return false;
-					}
+			return true;
+		}
+		else if (yFrom == yTo && board[xTo][yTo] == none) {
+			// Checking if there is something in the way
+			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
+			for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
+				if (board[checkX][yTo] != none) {
+					return false;
 				}
 			}
+			return true;
 		}
-		else {
-			int directionY = yTo - yFrom;
-			//Move left and right
-			if (board[xTo][yTo] == none) {
-				if (directionY > 0) {
-					for (int i = 1; i < yValidR; i++) {
-						valid = peice = board[xFrom][yFrom + i];
-						if (!valid) {
-							return false;
-						}
-					}
-				}
-				else {
-					for (int i = 1; i < yValidR; i++) {
-						valid = peice = board[xFrom][yFrom - i];
-						if (!valid) {
-							return false;
-						}
-
-					}
-				}
-			}
-		}
+		return false;
+	
 
 		break;
 	case bishop:
-
 		//Bishop move validation
-		if (board[xTo][yTo] == none && (yFrom - yTo == xFrom - xTo) || (yFrom - yTo == xTo - xFrom)) {
-			for (int i = 1; i < xValidB && yValidB; i++) {
-				//Liner move
-				valid = peice = board[xTo][yTo];
-				if (!valid) {
+		if (board[xTo][yTo] == none && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
+			// Checking if there is something in the way
+			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
+			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
+			int checkX;
+			int checkY;
+			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;
+				checkX != xFrom;
+				checkX = checkX + xOffSet, checkY = checkY + yOffSet)
+			{
+				if (board[checkX][checkY] != none) {
 					return false;
 				}
 			}
-
+			return true;
 		}
-		else return false;
-
+		return false;
+		
 
 
 		break;
 	case pawn:
+		//Pawn validation
+		if (yFrom == yTo) {
+			if (xFrom == xTo + 1) {
+				return true;
+			}
+		}
+		if (yFrom == yTo) {
+			if (xFrom == xTo - 1) {
+				return true;
+			}
+		}
+			else return false;
 
 		break;
 	case knight:
-		if ((yTo == yFrom + 1) || (yTo == yFrom - 1) && board[xTo][yTo] == none) {
-			if ((xTo == xFrom + 2) || (xTo == xFrom - 2) && board[xTo][yTo] == none) {
+		//Knight validation
+		if (yTo == yFrom + 1 || yTo == yFrom - 1 && board[xTo][yTo] == none) {
+			if (xTo == xFrom + 2 || xTo == xFrom - 2 && board[xTo][yTo] == none) {
 				valid = peice = board[xTo][yTo];
 				return true;
 			}
 		}
-				if ((yTo == yFrom + 2) || (yTo == yFrom - 2) && board[xTo][yTo] == none) {
-		 			if ((xTo == xFrom + 1) || (xTo == xFrom - 1) && board[xTo][yTo] == none) {
+				if (yTo == yFrom + 2 || yTo == yFrom - 2 && board[xTo][yTo] == none) {
+		 			if (xTo == xFrom + 1 || xTo == xFrom - 1 && board[xTo][yTo] == none) {
 						valid = peice = board[xTo][yTo];
 						return true;
 					}
 				}else  return false;
 		break;
 	case rook:
-		//Rook move validation
-		if (xFrom != xTo && yFrom != yTo) {
-			return false;
-		}
-		//Move for X
-		if (board[xTo][yTo] == none && yFrom == yTo) {
-			int directionX = xTo - xFrom;
-			//Move up or down
-			if (directionX < 0) {
-				for (int i = 1; i < xValidR; i++) {
-					valid = peice = board[xFrom - i][yFrom];
-					if (!valid) {
-						return false;
-					}
+		if (xFrom == xTo && board[xTo][yTo] == none) {
+			// Checking if there is something in the way
+			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
+			for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
+				if (board[xTo][checkY] != none) {
+					return false;
 				}
 			}
-			else {
-				for (int i = 1; i < xValidR; i++) {
-					valid = peice = board[xFrom + i][yTo];
-					if (!valid) {
-						return false;
-					}
+			return true;
+		}
+		else if (yFrom == yTo && board[xTo][yTo] == none) {
+			// Checking if there is something in the way
+			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
+			for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
+				if (board[checkX][yTo] != none) {
+					return false;
 				}
 			}
+			return true;
 		}
-		else {
-			int directionY = yTo - yFrom;
-			//Move left and right
-			if (board[xTo][yTo] == none) {
-				if (directionY > 0) {
-					for (int i = 1; i < yValidR; i++) {
-						valid = peice = board[xFrom][yFrom + i];
-						if (!valid) {
-							return false;
-						}
-					}
-				}
-				else {
-					for (int i = 1; i < yValidR; i++) {
-						valid = peice = board[xFrom][yFrom - i];
-						if (!valid) {
-							return false;
-						}
-
-					}
-				}
-			}
-		}
+		return false;
 		break;
 	default:
 		break;
@@ -319,13 +292,14 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 }
 
 int main() {
-	string input;
-	Board();
-
 	bool run = true;
-
+	string input;
+	//Sorting the board
+	Board();
+	//Loop for the input and printing the board
 	while (run)
 	{
+		//Printing the board
 		PrintBoard();
 		
 		std::cout << "Move: ";
@@ -333,7 +307,7 @@ int main() {
 
 		//Input validation
 		if (input.length() != 5) {
-			std::cout << "Invalid input";
+			std::cout << "Invalid input\n";
 			run = false;
 			break;
 		}
@@ -341,10 +315,8 @@ int main() {
 		else {
 			if ((!isdigit(input[0])) && !isdigit(input[3])) {
 				if ((isdigit(input[1])) && isdigit(input[4])) {
-
+					//Returning true or false if the move is valid
 					bool result = validMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-
 
 					if (result == true) {
 						std::cout << "Valid move\n";
@@ -353,8 +325,6 @@ int main() {
 
 					}
 					else std::cout << "Invalid move\n";
-
-			
 
 				}
 
