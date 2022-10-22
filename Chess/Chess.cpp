@@ -75,6 +75,7 @@ void Team() {
 	}
 
 }
+
 void PrintBoard(){
     for (int i = 0; i < 8; i++){
         std::cout << (i + 1) << ' ' << '|';
@@ -178,27 +179,19 @@ void PrintBoard(){
 }
 //Function for validating the moves of the pieces
 bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
-	//Getting the absolute value of the valid positions 
-	int xValid = abs(xFrom - xTo);
-	int yValid = abs(yFrom - yTo);
-	int yValidR = abs(yFrom - yTo);
-	int xValidR = abs(xFrom - xTo);
-	int xValidB = abs(xFrom - xTo);
-	int yValidB = abs(yFrom - yTo);
-	bool valid = true;
+	//Boards
 	piece peice = board[xFrom][yFrom];
 	team teamm = boardT[xFrom][yFrom];
+	int validKingX = xFrom - xTo;
+	int  validKingY = yFrom - yTo;
 
 	switch (peice) {
 	case none:
 		break;
 	case king:
 		//King move validation
-		if (xValid < 2 && yValid < 2 && board[xTo][yTo] == none) {
-			peice = board[xTo][yTo];
-			teamm = boardT[xTo][yTo];
-			board[xFrom][yFrom] = none;
-			boardT[xFrom][yFrom] = nothing;
+		
+		if (board[xTo][yTo] == none && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1)) {
 			return true;
 		}
 		else return false;
