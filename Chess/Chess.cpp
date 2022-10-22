@@ -3,6 +3,11 @@
 using namespace std;
 
 //Declaring pieces
+enum team {
+	nothing,
+	white,
+	black
+};
 enum piece {
 	none,
 	king,
@@ -37,6 +42,35 @@ void Board() {
 	for (int i = 0; i < 8; i++) {
 		board[1][i] = pawn;
 		board[6][i] = pawn;
+
+	}
+
+}
+team boardT[8][8];
+void Team() {
+	//Clearing out the board
+	memset(boardT, 0, sizeof(boardT));
+	//Setting up the teams
+	boardT[0][0] = white;
+	boardT[0][1] = white;
+	boardT[0][2] = white;
+	boardT[0][3] = white;
+	boardT[0][4] = white;
+	boardT[0][5] = white;
+	boardT[0][6] = white;
+	boardT[0][7] = white;
+	boardT[7][0] = black;
+	boardT[7][1] = black;
+	boardT[7][2] = black;
+	boardT[7][3] = black;
+	boardT[7][4] = black;
+	boardT[7][5] = black;
+	boardT[7][6] = black;
+	boardT[7][7] = black;
+	//Loop for declaring teams
+	for (int i = 0; i < 8; i++) {
+		boardT[1][i] = white;
+		boardT[6][i] = black;
 
 	}
 
@@ -153,6 +187,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 	int yValidB = abs(yFrom - yTo);
 	bool valid = true;
 	piece peice = board[xFrom][yFrom];
+	team teamm = boardT[xFrom][yFrom];
 
 	switch (peice) {
 	case none:
@@ -161,7 +196,9 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 		//King move validation
 		if (xValid < 2 && yValid < 2 && board[xTo][yTo] == none) {
 			peice = board[xTo][yTo];
+			teamm = boardT[xTo][yTo];
 			board[xFrom][yFrom] = none;
+			boardT[xFrom][yFrom] = nothing;
 			return true;
 		}
 		else return false;
@@ -176,14 +213,13 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
 			int checkX;
 			int checkY;
-			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;
-				checkX != xFrom;
-				checkX = checkX + xOffSet, checkY = checkY + yOffSet)
-			{
+			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;checkX != xFrom;checkX = checkX + xOffSet, checkY = checkY + yOffSet){
 				if (board[checkX][checkY] != none) {
 					return false;
 				}
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		if (xFrom == xTo && board[xTo][yTo] == none) {
@@ -193,7 +229,10 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 				if (board[xTo][checkY] != none) {
 					return false;
 				}
+
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		else if (yFrom == yTo && board[xTo][yTo] == none) {
@@ -204,6 +243,8 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 					return false;
 				}
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		return false;
@@ -218,14 +259,13 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
 			int checkX;
 			int checkY;
-			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;
-				checkX != xFrom;
-				checkX = checkX + xOffSet, checkY = checkY + yOffSet)
-			{
+			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;checkX != xFrom;checkX = checkX + xOffSet, checkY = checkY + yOffSet){
 				if (board[checkX][checkY] != none) {
 					return false;
 				}
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		return false;
@@ -235,30 +275,65 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 		break;
 	case pawn:
 		//Pawn validation
-		if (yFrom == yTo) {
-			if (xFrom == xTo + 1) {
-				return true;
+		if (xFrom == 1) {
+			if (yTo == yFrom) {
+				if (board[xTo][yTo] == none && xTo == xFrom + 1) {
+					boardT[xFrom][yFrom] = nothing;
+					boardT[xTo][yTo] = teamm;
+					return true;
+				}
+				if (board[xTo][yTo] == none && xTo == xFrom + 2) {
+					boardT[xFrom][yFrom] = nothing;
+					boardT[xTo][yTo] = teamm;
+					return true;
+				}
+			}
+			
+		}if (xFrom == 6) {
+			if (yTo == yFrom) {
+				if (board[xTo][yTo] == none && xTo == xFrom - 1) {
+					boardT[xFrom][yFrom] = nothing;
+					boardT[xTo][yTo] = teamm;
+					return true;
+				}
+				if (board[xTo][yTo] == none && xTo == xFrom - 2) {
+					boardT[xFrom][yFrom] = nothing;
+					boardT[xTo][yTo] = teamm;
+					return true;
+				}
 			}
 		}
-		if (yFrom == yTo) {
-			if (xFrom == xTo - 1) {
+		if (yTo == yFrom) {
+			if (board[xTo][yTo] == none && xTo == xFrom + 1) {
+				boardT[xFrom][yFrom] = nothing;
+				boardT[xTo][yTo] = teamm;
+				return true;
+			}
+			if (board[xTo][yTo] == none && xTo == xFrom - 1) {
+				boardT[xFrom][yFrom] = nothing;
+				boardT[xTo][yTo] = teamm;
 				return true;
 			}
 		}
 			else return false;
 
+			
 		break;
 	case knight:
 		//Knight validation
-		if (yTo == yFrom + 1 || yTo == yFrom - 1 && board[xTo][yTo] == none) {
-			if (xTo == xFrom + 2 || xTo == xFrom - 2 && board[xTo][yTo] == none) {
-				valid = peice = board[xTo][yTo];
+		if (board[xTo][yTo] == none && yTo == yFrom + 1 || yTo == yFrom - 1 ) {
+			if (board[xTo][yTo] == none && xTo == xFrom + 2 || xTo == xFrom - 2) {
+				peice = board[xTo][yTo];
+				boardT[xFrom][yFrom] = nothing;
+				boardT[xTo][yTo] = teamm;
 				return true;
 			}
 		}
-				if (yTo == yFrom + 2 || yTo == yFrom - 2 && board[xTo][yTo] == none) {
-		 			if (xTo == xFrom + 1 || xTo == xFrom - 1 && board[xTo][yTo] == none) {
-						valid = peice = board[xTo][yTo];
+				if (board[xTo][yTo] == none && yTo == yFrom + 2 || yTo == yFrom - 2 ) {
+		 			if (board[xTo][yTo] == none && xTo == xFrom + 1 || xTo == xFrom - 1 ) {
+						peice = board[xTo][yTo];
+						boardT[xFrom][yFrom] = nothing;
+						boardT[xTo][yTo] = teamm;
 						return true;
 					}
 				}else  return false;
@@ -271,7 +346,10 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 				if (board[xTo][checkY] != none) {
 					return false;
 				}
+				
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		else if (yFrom == yTo && board[xTo][yTo] == none) {
@@ -282,6 +360,8 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 					return false;
 				}
 			}
+			boardT[xFrom][yFrom] = nothing;
+			boardT[xTo][yTo] = teamm;
 			return true;
 		}
 		return false;
@@ -296,12 +376,12 @@ int main() {
 	string input;
 	//Sorting the board
 	Board();
+	Team();
 	//Loop for the input and printing the board
 	while (run)
 	{
 		//Printing the board
 		PrintBoard();
-		
 		std::cout << "Move: ";
 		cin >> input;
 
@@ -317,12 +397,13 @@ int main() {
 				if ((isdigit(input[1])) && isdigit(input[4])) {
 					//Returning true or false if the move is valid
 					bool result = validMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-					if (result == true) {
+					
+						if (result == true) {
 						std::cout << "Valid move\n";
 						board[input[4] - 49][input[3] - 97] = board[input[1] - 49][input[0] - 97];
 						board[input[1] - 49][input[0] - 97] = none;
 
+						
 					}
 					else std::cout << "Invalid move\n";
 
@@ -331,7 +412,4 @@ int main() {
 			}
 		}
 	}
-
-
-
 }
