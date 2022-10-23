@@ -182,6 +182,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 	//Boards
 	piece peice = board[xFrom][yFrom];
 	team teamm = boardT[xFrom][yFrom];
+	//Declaring valid king moves 
 	int validKingX = xFrom - xTo;
 	int  validKingY = yFrom - yTo;
 
@@ -221,6 +222,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			return true;
 		}
 		else {
+			//Getting the opposite color piece
 			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
 				// Checking if there is something in the way
 				int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
@@ -263,6 +265,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			return true;
 		}
 		else {
+			//Getting the opposite color piece
 			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && xFrom == xTo) {
 				// Checking if there is something in the way
 				int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
@@ -311,6 +314,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			boardT[xTo][yTo] = teamm;
 			return true;
 		}
+		//Getting the opposite color piece
 		else {
 			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
 				// Checking if there is something in the way
@@ -335,7 +339,8 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 		break;
 	case pawn:
 		//Pawn validation
-		if (xFrom == 1) {
+		//Checking if it is the fist move of a white pawn
+		if (xFrom == 1 && boardT[xFrom][yFrom]==  white) {
 			if (yTo == yFrom) {
 				if (board[xTo][yTo] == none && xTo == xFrom + 1) {
 					boardT[xFrom][yFrom] = nothing;
@@ -349,7 +354,9 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 				}
 			}
 			
-		}if (xFrom == 6) {
+		}
+		//Checking if it is the fist move of a black pawn
+		if (xFrom == 6 && boardT[xFrom][yFrom] == black) {
 			if (yTo == yFrom) {
 				if (board[xTo][yTo] == none && xTo == xFrom - 1) {
 					boardT[xFrom][yFrom] = nothing;
@@ -363,13 +370,31 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 				}
 			}
 		}
-		if (yTo == yFrom) {
+		//Move validation for white pawn
+		if (yTo == yFrom && boardT[xFrom][yFrom] == white) {
 			if (board[xTo][yTo] == none && xTo == xFrom + 1) {
 				boardT[xFrom][yFrom] = nothing;
 				boardT[xTo][yTo] = teamm;
 				return true;
 			}
-			if (board[xTo][yTo] == none && xTo == xFrom - 1 ) {
+			//Move validation for black pawn
+			if (boardT[xFrom][yFrom] == black && board[xTo][yTo] == none && xTo == xFrom - 1 ) {
+				boardT[xFrom][yFrom] = nothing;
+				boardT[xTo][yTo] = teamm;
+				return true;
+			}
+		}
+		//Checking if i can get opposite pawn when white
+		if (boardT[xFrom][yFrom] == white && boardT[xTo][yTo] == black && yTo == yFrom + 1 || yTo == yFrom - 1) {
+			if (xTo == xFrom + 1) {
+				boardT[xFrom][yFrom] = nothing;
+				boardT[xTo][yTo] = teamm;
+				return true;
+			}
+		}
+		//Checking if i can get opposite pawn when black
+		if (boardT[xFrom][yFrom] == black && boardT[xTo][yTo] == white && yTo == yFrom + 1 || yTo == yFrom - 1) {
+			if (xTo == xFrom - 1) {
 				boardT[xFrom][yFrom] = nothing;
 				boardT[xTo][yTo] = teamm;
 				return true;
@@ -397,6 +422,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 				return true;
 			}
 		}
+		//Getting the opposite color piece
 		else {
 			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && yTo == yFrom + 1 || yTo == yFrom - 1) {
 				if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && board[xTo][yTo] == none && xTo == xFrom + 2 || xTo == xFrom - 2) {
@@ -443,6 +469,7 @@ bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
 			boardT[xTo][yTo] = teamm;
 			return true;
 		}
+		//Getting the opposite color piece
 		else {
 			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && xFrom == xTo) {
 				// Checking if there is something in the way
@@ -489,6 +516,7 @@ int main() {
 	{
 		//Printing the board
 		PrintBoard();
+		//Checking if for turns
 		if (turn == true) {
 			std::cout << "Move white: ";
 			cin >> input;
