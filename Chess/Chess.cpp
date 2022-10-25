@@ -1,80 +1,74 @@
 #include <iostream>
 #include <string>
+#include "Struct.h"
+#include "CBishop.h"
+#include "CKing.h"
+#include "CKnight.h"
+#include "CPawn.h"
+#include "CQueen.h"
+#include "CRook.h"
+#include "CFigure.h"
 using namespace std;
 
-//Declaring pieces
-enum team {
-	nothing,
-	white,
-	black
-};
-enum piece {
-	none,
-	king,
-	queen,
-	bishop,
-	pawn,
-	knight,
-	rook,
-};
-piece board[8][8];
-void Board(){
-	//Clearing out the board
-	memset(board, 0, sizeof(board));
-	//Setting up the pieces on the board 
-	board[0][0] = rook;
-	board[0][1] = knight;
-	board[0][2] = bishop;
-	board[0][3] = queen;
-	board[0][4] = king;
-	board[0][5] = bishop;
-	board[0][6] = knight;
-	board[0][7] = rook;
-	board[7][0] = rook;
-	board[7][1] = knight;
-	board[7][2] = bishop;
-	board[7][3] = queen;
-	board[7][4] = king;
-	board[7][5] = bishop;
-	board[7][6] = knight;
-	board[7][7] = rook;
-	//Loop for declaring the pawns
-	for (int i = 0; i < 8; i++) {
-		board[1][i] = pawn;
-		board[6][i] = pawn;
 
-	}
+EPiece  board[8][8];
+ETeam boardT[8][8];
+ETeam currentTeam = ETeam::white;
+void Board() {
+    //Setting up the pieces on the board 
+    board[0][0] = EPiece::rook;
+    board[0][1] = EPiece::knight;
+    board[0][2] = EPiece::bishop;
+    board[0][3] = EPiece::queen;
+    board[0][4] = EPiece::king;
+    board[0][5] = EPiece::bishop;
+    board[0][6] = EPiece::knight;
+    board[0][7] = EPiece::rook;
+    board[7][0] = EPiece::rook;
+    board[7][1] = EPiece::knight;
+    board[7][2] = EPiece::bishop;
+    board[7][3] = EPiece::queen;
+    board[7][4] = EPiece::king;
+    board[7][5] = EPiece::bishop;
+    board[7][6] = EPiece::knight;
+    board[7][7] = EPiece::rook;
+    //Loop for declaring the pawns
+    for (int i = 0; i < 8; i++) {
+        board[1][i] = EPiece::pawn;
+        board[6][i] = EPiece::pawn;
+
+    }
 
 }
-team boardT[8][8];
 void Team() {
-	//Clearing out the board
-	memset(boardT, 0, sizeof(boardT));
-	//Setting up the teams
-	boardT[0][0] = white;
-	boardT[0][1] = white;
-	boardT[0][2] = white;
-	boardT[0][3] = white;
-	boardT[0][4] = white;
-	boardT[0][5] = white;
-	boardT[0][6] = white;
-	boardT[0][7] = white;
-	boardT[7][0] = black;
-	boardT[7][1] = black;
-	boardT[7][2] = black;
-	boardT[7][3] = black;
-	boardT[7][4] = black;
-	boardT[7][5] = black;
-	boardT[7][6] = black;
-	boardT[7][7] = black;
-	//Loop for declaring teams
-	for (int i = 0; i < 8; i++) {
-		boardT[1][i] = white;
-		boardT[6][i] = black;
+    //Setting up the teams
+    boardT[0][0] = ETeam::white;
+    boardT[0][1] = ETeam::white;
+    boardT[0][2] = ETeam::white;
+    boardT[0][3] = ETeam::white;
+    boardT[0][4] = ETeam::white;
+    boardT[0][5] = ETeam::white;
+    boardT[0][6] = ETeam::white;
+    boardT[0][7] = ETeam::white;
+    boardT[7][0] = ETeam::black;
+    boardT[7][1] = ETeam::black;
+    boardT[7][2] = ETeam::black;
+    boardT[7][3] = ETeam::black;
+    boardT[7][4] = ETeam::black;
+    boardT[7][5] = ETeam::black;
+    boardT[7][6] = ETeam::black;
+    boardT[7][7] = ETeam::black;
+    //Loop for declaring teams
+    for (int i = 0; i < 8; i++) {
+        boardT[1][i] = ETeam::white;
+        boardT[6][i] = ETeam::black;
 
-	}
+    }
 
 }
+
+
+
 
 void PrintBoard(){
     for (int i = 0; i < 8; i++){
@@ -82,37 +76,37 @@ void PrintBoard(){
         for (int j = 0; j < 8; j++){
 
             switch (board[i][j]){
-            case none:{
+            case EPiece::none:{
                 std::cout << ' ';
                 break;
             }
 
-            case king:{
+            case EPiece::king:{
                 std::cout << "K";
                 break;
             }
 
-            case queen:{
+            case EPiece::queen:{
                 std::cout << "Q";
                 break;
             }
 
-            case bishop:{
+            case EPiece::bishop:{
                 std::cout << "B";
                 break;
             }
 
-            case pawn:{
+            case EPiece::pawn:{
                 std::cout << "P";
                 break;
             }
 
-            case knight:{
+            case EPiece::knight:{
                 std::cout << "N";
                 break;
             }
 
-            case rook:{
+            case EPiece::rook:{
                 std::cout << "R";
                 break;
             }
@@ -178,339 +172,14 @@ void PrintBoard(){
     std::cout << '\n';
 }
 //Function for validating the moves of the pieces
-bool validMove(int xFrom, int yFrom, int xTo, int yTo) {
-	//Boards
-	piece peice = board[xFrom][yFrom];
-	team teamm = boardT[xFrom][yFrom];
-	//Declaring valid king moves 
-	int validKingX = xFrom - xTo;
-	int  validKingY = yFrom - yTo;
-
-	switch (peice) {
-	case none:
-		break;
-	case king:
-		//King move validation
-		
-		if (board[xTo][yTo] == none && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1) || boardT[xTo][yTo] ) {
-			return true;
-		}
-		else {
-			if ((boardT[xFrom][yFrom] != boardT[xTo][yTo]) &&(validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1) || boardT[xTo][yTo]) {
-				return true;
-			}
-		}
-		return false;
-
-
-		break;
-	case queen:
-		//Queen validation
-		if (board[xTo][yTo] == none && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
-			// Checking if there is something in the way
-			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-			int checkX;
-			int checkY;
-			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet; checkX != xFrom; checkX = checkX + xOffSet, checkY = checkY + yOffSet) {
-				if (board[checkX][checkY] != none) {
-					return false;
-				}
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		else {
-			//Getting the opposite color piece
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
-				// Checking if there is something in the way
-				int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-				int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-				int checkX;
-				int checkY;
-				for (checkX = xTo + xOffSet, checkY = yTo + yOffSet; checkX != xFrom; checkX = checkX + xOffSet, checkY = checkY + yOffSet) {
-					if (board[checkX][checkY] != none) {
-						return false;
-					}
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		if (board[xTo][yTo] == none && xFrom == xTo) {
-			// Checking if there is something in the way
-			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-			for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
-				if (board[xTo][checkY] != none) {
-					return false;
-				}
-
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		else if (board[xTo][yTo] == none && yFrom == yTo) {
-			// Checking if there is something in the way
-			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-			for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
-				if (board[checkX][yTo] != none) {
-					return false;
-				}
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		else {
-			//Getting the opposite color piece
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && xFrom == xTo) {
-				// Checking if there is something in the way
-				int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-				for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
-					if (board[xTo][checkY] != none) {
-						return false;
-					}
-
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-			else if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yFrom == yTo) {
-				// Checking if there is something in the way
-				int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-				for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
-					if (board[checkX][yTo] != none) {
-						return false;
-					}
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		return false;
-		
-	
-
-		break;
-	case bishop:
-		//Bishop move validation
-		if (board[xTo][yTo] == none && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom ) {
-			// Checking if there is something in the way
-			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-			int checkX;
-			int checkY;
-			for (checkX = xTo + xOffSet, checkY = yTo + yOffSet;checkX != xFrom;checkX = checkX + xOffSet, checkY = checkY + yOffSet){
-				if (board[checkX][checkY] != none) {
-					return false;
-				}
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		//Getting the opposite color piece
-		else {
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yFrom - yTo == xFrom - xTo || yFrom - yTo == xTo - xFrom) {
-				// Checking if there is something in the way
-				int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-				int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-				int checkX;
-				int checkY;
-				for (checkX = xTo + xOffSet, checkY = yTo + yOffSet; checkX != xFrom; checkX = checkX + xOffSet, checkY = checkY + yOffSet) {
-					if (board[checkX][checkY] != none) {
-						return false;
-					}
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		return false;
-		
-
-
-		break;
-	case pawn:
-		//Pawn validation
-		//Checking if it is the fist move of a white pawn
-		if (xFrom == 1 && boardT[xFrom][yFrom]==  white) {
-			if (yTo == yFrom) {
-				if (board[xTo][yTo] == none && xTo == xFrom + 1) {
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-				if (board[xTo][yTo] == none && xTo == xFrom + 2) {
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-			}
-			
-		}
-		//Checking if it is the fist move of a black pawn
-		if (xFrom == 6 && boardT[xFrom][yFrom] == black) {
-			if (yTo == yFrom) {
-				if (board[xTo][yTo] == none && xTo == xFrom - 1) {
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-				if (board[xTo][yTo] == none && xTo == xFrom - 2) {
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-			}
-		}
-		//Move validation for white pawn
-		if (yTo == yFrom && boardT[xFrom][yFrom] == white) {
-			if (board[xTo][yTo] == none && xTo == xFrom + 1) {
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-			//Move validation for black pawn
-			if (boardT[xFrom][yFrom] == black && board[xTo][yTo] == none && xTo == xFrom - 1 ) {
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		//Checking if i can get opposite pawn when white
-		if (boardT[xFrom][yFrom] == white && boardT[xTo][yTo] == black && yTo == yFrom + 1 || yTo == yFrom - 1) {
-			if (xTo == xFrom + 1) {
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		//Checking if i can get opposite pawn when black
-		if (boardT[xFrom][yFrom] == black && boardT[xTo][yTo] == white && yTo == yFrom + 1 || yTo == yFrom - 1) {
-			if (xTo == xFrom - 1) {
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-			else return false;
-
-			
-		break;
-	case knight:
-		//Knight validation
-		if (board[xTo][yTo] == none && yTo == yFrom + 1 || yTo == yFrom - 1) {
-			if (board[xTo][yTo] == none && xTo == xFrom + 2 || xTo == xFrom - 2) {
-				peice = board[xTo][yTo];
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		if (board[xTo][yTo] == none && yTo == yFrom + 2 || yTo == yFrom - 2) {
-			if (board[xTo][yTo] == none && xTo == xFrom + 1 || xTo == xFrom - 1) {
-				peice = board[xTo][yTo];
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		//Getting the opposite color piece
-		else {
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && yTo == yFrom + 1 || yTo == yFrom - 1) {
-				if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && board[xTo][yTo] == none && xTo == xFrom + 2 || xTo == xFrom - 2) {
-					peice = board[xTo][yTo];
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-			}
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && yTo == yFrom + 2 || yTo == yFrom - 2) {
-				if ((boardT[xTo][yTo] != boardT[xFrom][yFrom]) && xTo == xFrom + 1 || xTo == xFrom - 1) {
-					peice = board[xTo][yTo];
-					boardT[xFrom][yFrom] = nothing;
-					boardT[xTo][yTo] = teamm;
-					return true;
-				}
-			}
-		}
-			return false;
-		break;
-	case rook:
-		if (board[xTo][yTo] == none && xFrom == xTo) {
-			// Checking if there is something in the way
-			int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-			for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
-				if (board[xTo][checkY] != none) {
-					return false;
-				}
-				
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		else if (board[xTo][yTo] == none && yFrom == yTo ) {
-			// Checking if there is something in the way
-			int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-			for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
-				if (board[checkX][yTo] != none) {
-					return false;
-				}
-			}
-			boardT[xFrom][yFrom] = nothing;
-			boardT[xTo][yTo] = teamm;
-			return true;
-		}
-		//Getting the opposite color piece
-		else {
-			if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && xFrom == xTo) {
-				// Checking if there is something in the way
-				int yOffSet = (yFrom - yTo > 0) ? 1 : -1;
-				for (int checkY = yTo + yOffSet; checkY != yFrom; checkY = checkY + yOffSet) {
-					if (board[xTo][checkY] != none) {
-						return false;
-					}
-
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-			else if ((boardT[xTo][yTo] != boardT[xFrom][yFrom])  && yFrom == yTo) {
-				// Checking if there is something in the way
-				int xOffSet = (xFrom - xTo > 0) ? 1 : -1;
-				for (int checkX = xTo + xOffSet; checkX != xFrom; checkX = checkX + xOffSet) {
-					if (board[checkX][yTo] != none) {
-						return false;
-					}
-				}
-				boardT[xFrom][yFrom] = nothing;
-				boardT[xTo][yTo] = teamm;
-				return true;
-			}
-		}
-		return false;
-		break;
-	default:
-		break;
-	}
-}
 
 int main() {
 	bool turn = true;
 	bool run = true;
 	string input;
 	//Sorting the board
-	Board();
-	Team();
+    Board();
+    Team();
 	//Loop for the input and printing the board
 	while (run)
 	{
@@ -539,12 +208,71 @@ int main() {
 			if ((!isdigit(input[0])) && !isdigit(input[3])) {
 				if ((isdigit(input[1])) && isdigit(input[4])) {
 					//Returning true or false if the move is valid
-					bool result = validMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+                    bool result = false;
 					
-						if (result == true) {
-						std::cout << "Valid move\n";
-						board[input[4] - 49][input[3] - 97] = board[input[1] - 49][input[0] - 97];
-						board[input[1] - 49][input[0] - 97] = none;
+                    switch (board[input[1] - 49][input[0] - 97]){
+                        case EPiece::pawn:{
+                            CFigure* figure = new CPawn();
+
+                            result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+                        case EPiece::king: {
+                            CFigure* figure = new CKing();
+
+                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+                        case EPiece::queen: {
+                            CFigure* figure = new CQueen();
+
+                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+                        case EPiece::bishop: {
+                            CFigure* figure = new CBishop();
+
+                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+                        case EPiece::rook: {
+                            CFigure* figure = new CRook();
+
+                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+                        case EPiece::knight: {
+                            CFigure* figure = new CKnight();
+
+                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
+
+                            delete figure;
+
+                            break;
+                        }
+
+                    }
+                    
+
+					if (result == true) {
+					std::cout << "Valid move\n";
+					board[input[4] - 49][input[3] - 97] = board[input[1] - 49][input[0] - 97];
+					board[input[1] - 49][input[0] - 97] = EPiece::none;
 
 						
 					}

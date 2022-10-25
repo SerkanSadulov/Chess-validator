@@ -1,3 +1,6 @@
-﻿  Chess.cpp
-C:\Users\Serko\Desktop\Project\Github\Chess\Chess\Chess.cpp(505): warning C4715: 'validMove': not all control paths return a value
-  Chess.vcxproj -> C:\Users\Serko\Desktop\Project\Github\Chess\x64\Debug\Chess.exe
+﻿  CPawn.cpp
+  CQueen.cpp
+  CRook.cpp
+  Generating Code...
+C:\Users\Serko\Desktop\Chess\Chess\CPawn.cpp(73): warning C4715: 'CPawn::ValidMove': not all control paths return a value
+  Chess.vcxproj -> C:\Users\Serko\Desktop\Chess\x64\Debug\Chess.exe
