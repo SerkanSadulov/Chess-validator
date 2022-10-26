@@ -8,74 +8,64 @@
 #include "CQueen.h"
 #include "CRook.h"
 #include "CFigure.h"
+#include <array>
 using namespace std;
 
-
-EPiece  board[8][8];
-ETeam boardT[8][8];
-ETeam currentTeam = ETeam::white;
+std::array<std::array<CFigure*, 8>, 8> board;
+//Setting the board
 void Board() {
     //Setting up the pieces on the board 
-    board[0][0] = EPiece::rook;
-    board[0][1] = EPiece::knight;
-    board[0][2] = EPiece::bishop;
-    board[0][3] = EPiece::queen;
-    board[0][4] = EPiece::king;
-    board[0][5] = EPiece::bishop;
-    board[0][6] = EPiece::knight;
-    board[0][7] = EPiece::rook;
-    board[7][0] = EPiece::rook;
-    board[7][1] = EPiece::knight;
-    board[7][2] = EPiece::bishop;
-    board[7][3] = EPiece::queen;
-    board[7][4] = EPiece::king;
-    board[7][5] = EPiece::bishop;
-    board[7][6] = EPiece::knight;
-    board[7][7] = EPiece::rook;
+    board[0][0] = new CRook;
+    board[0][0]->setTeam(ETeam::white);
+    board[0][1] = new CKnight;
+    board[0][1]->setTeam(ETeam::white);
+    board[0][2] = new CBishop;
+    board[0][2]->setTeam(ETeam::white);
+    board[0][3] = new CQueen;
+    board[0][3]->setTeam(ETeam::white);
+    board[0][4] = new CKing;
+    board[0][4]->setTeam(ETeam::white);
+    board[0][5] = new CBishop;
+    board[0][5]->setTeam(ETeam::white);
+    board[0][6] = new CKnight;
+    board[0][6]->setTeam(ETeam::white);
+    board[0][7] = new CRook;
+    board[0][7]->setTeam(ETeam::white);
+    board[7][0] = new CRook;
+    board[7][0]->setTeam(ETeam::black);
+    board[7][1] = new CKnight;
+    board[7][1]->setTeam(ETeam::black);
+    board[7][2] = new CBishop;
+    board[7][2]->setTeam(ETeam::black);
+    board[7][3] = new CQueen;
+    board[7][3]->setTeam(ETeam::black);
+    board[7][4] = new CKing;
+    board[7][4]->setTeam(ETeam::black);
+    board[7][5] = new CBishop;
+    board[7][5]->setTeam(ETeam::black);
+    board[7][6] = new CKnight;
+    board[7][6]->setTeam(ETeam::black);
+    board[7][7] = new CRook;
+    board[7][7]->setTeam(ETeam::black);
     //Loop for declaring the pawns
     for (int i = 0; i < 8; i++) {
-        board[1][i] = EPiece::pawn;
-        board[6][i] = EPiece::pawn;
-
+        board[1][i] = new CPawn;
+        board[1][i]->setTeam(ETeam::white);
+        board[6][i] = new CPawn;
+        board[6][i]->setTeam(ETeam::black);
     }
 
 }
-void Team() {
-    //Setting up the teams
-    boardT[0][0] = ETeam::white;
-    boardT[0][1] = ETeam::white;
-    boardT[0][2] = ETeam::white;
-    boardT[0][3] = ETeam::white;
-    boardT[0][4] = ETeam::white;
-    boardT[0][5] = ETeam::white;
-    boardT[0][6] = ETeam::white;
-    boardT[0][7] = ETeam::white;
-    boardT[7][0] = ETeam::black;
-    boardT[7][1] = ETeam::black;
-    boardT[7][2] = ETeam::black;
-    boardT[7][3] = ETeam::black;
-    boardT[7][4] = ETeam::black;
-    boardT[7][5] = ETeam::black;
-    boardT[7][6] = ETeam::black;
-    boardT[7][7] = ETeam::black;
-    //Loop for declaring teams
-    for (int i = 0; i < 8; i++) {
-        boardT[1][i] = ETeam::white;
-        boardT[6][i] = ETeam::black;
-
-    }
-
-}
-
-
-
-
-void PrintBoard(){
+//Printing board
+void PrintBoard() {
     for (int i = 0; i < 8; i++){
         std::cout << (i + 1) << ' ' << '|';
         for (int j = 0; j < 8; j++){
-
-            switch (board[i][j]){
+            if (board[i][j] == nullptr) {
+                std::cout << " "<<"|";
+                continue;
+            }
+            switch (board[i][j]->GetPiece()){
             case EPiece::none:{
                 std::cout << ' ';
                 break;
@@ -171,18 +161,15 @@ void PrintBoard(){
     }
     std::cout << '\n';
 }
-//Function for validating the moves of the pieces
 
 int main() {
+    
 	bool turn = true;
 	bool run = true;
 	string input;
 	//Sorting the board
     Board();
-    Team();
-	//Loop for the input and printing the board
-	while (run)
-	{
+	while (run){
 		//Printing the board
 		PrintBoard();
 		//Checking if for turns
@@ -196,7 +183,6 @@ int main() {
 			cin >> input;
 			turn = true;
 		};
-
 		//Input validation
 		if (input.length() != 5) {
 			std::cout << "Invalid input\n";
@@ -205,82 +191,25 @@ int main() {
 		}
 		//Conversion from ASII to Numbers
 		else {
-			if ((!isdigit(input[0])) && !isdigit(input[3])) {
-				if ((isdigit(input[1])) && isdigit(input[4])) {
-					//Returning true or false if the move is valid
-                    bool result = false;
-					
-                    switch (board[input[1] - 49][input[0] - 97]){
-                        case EPiece::pawn:{
-                            CFigure* figure = new CPawn();
-
-                            result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-                        case EPiece::king: {
-                            CFigure* figure = new CKing();
-
-                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-                        case EPiece::queen: {
-                            CFigure* figure = new CQueen();
-
-                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-                        case EPiece::bishop: {
-                            CFigure* figure = new CBishop();
-
-                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-                        case EPiece::rook: {
-                            CFigure* figure = new CRook();
-
-                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-                        case EPiece::knight: {
-                            CFigure* figure = new CKnight();
-
-                             result = figure->ValidMove(input[1] - 49, input[0] - 97, input[4] - 49, input[3] - 97);
-
-                            delete figure;
-
-                            break;
-                        }
-
+            if ((!isdigit(input[0])) && !isdigit(input[3]) && (isdigit(input[1])) && isdigit(input[4])) {
+                bool result = false;
+                int boardInpZero = input[0] - 97;
+                int boardInpOne = input[1] - 49;
+                int boardInpThree = input[3] - 97;
+                int boardInpFour = input[4] - 49;
+                if (board[boardInpOne][boardInpZero] != nullptr) {
+                    result = board[boardInpOne][boardInpZero]->ValidMove(boardInpOne, boardInpZero, boardInpFour, boardInpThree);
+                    //Returning true or false if the move is valid
+                    if (result == true) {
+                        std::cout << "Valid move\n";
+                        board[boardInpFour][boardInpThree] = board[boardInpOne][boardInpZero];
+                        board[boardInpOne][boardInpZero] = nullptr;
                     }
-                    
+                    else std::cout << "Invalid move\n";
+                }
+                else std::cout << "Invalid move\n";
+            }
 
-					if (result == true) {
-					std::cout << "Valid move\n";
-					board[input[4] - 49][input[3] - 97] = board[input[1] - 49][input[0] - 97];
-					board[input[1] - 49][input[0] - 97] = EPiece::none;
-
-						
-					}
-					else std::cout << "Invalid move\n";
-
-				}
-
-			}
 		}
 	}
 }

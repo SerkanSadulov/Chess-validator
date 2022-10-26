@@ -1,17 +1,15 @@
 #include "CKing.h"
-extern EPiece  board[8][8];
-extern ETeam boardT[8][8];
+extern std::array<std::array<CFigure*, 8>, 8> board;
 bool CKing::ValidMove(int xFrom, int yFrom, int xTo, int yTo) {
 	//King move validation
-
 	int validKingX = xFrom - xTo;
 	int  validKingY = yFrom - yTo;
 
-	if (board[xTo][yTo] == EPiece::none && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1) ) {
+	if (board[xTo][yTo] == nullptr && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1)) {
 		return true;
 	}
 	else {
-		if ((boardT[xFrom][yFrom] != boardT[xTo][yTo]) && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1)  ) {
+		if ((board[xFrom][yFrom]->getTeam() != board[xTo][yTo]->getTeam()) && (validKingX >= -1 && validKingX <= 1) && (validKingY >= -1 && validKingY <= 1)) {
 			return true;
 		}
 	}
