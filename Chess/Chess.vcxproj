@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CBishop.cpp" />
+    <ClCompile Include="CBoard.cpp" />
     <ClCompile Include="CFigure.cpp" />
     <ClCompile Include="Chess.cpp" />
     <ClCompile Include="CKing.cpp" />
@@ -138,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CBishop.h" />
+    <ClInclude Include="CBoard.h" />
     <ClInclude Include="CFigure.h" />
     <ClInclude Include="CKing.h" />
     <ClInclude Include="CKnight.h" />

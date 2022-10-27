@@ -1,6 +1,6 @@
 #include "CBishop.h"
-extern std::array<std::array<CFigure*, 8>, 8> board;
-bool CBishop::ValidMove(int xFrom, int yFrom, int xTo, int yTo){
+CBishop::CBishop(ETeam team) :CFigure(team) {}
+bool CBishop::ValidMove(std::array<std::array<CFigure*, 8>, 8> board, int xFrom, int yFrom, int xTo, int yTo){
 	EPiece peice = board[xFrom][yFrom] -> GetPiece();
 	ETeam teamm = board[xFrom][yFrom]->getTeam();
 	//Bishop move validation

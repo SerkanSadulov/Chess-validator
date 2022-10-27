@@ -1,7 +1,6 @@
 #include "CRook.h"
-extern std::array<std::array<CFigure*, 8>, 8> board;
-
-bool CRook::ValidMove(int xFrom, int yFrom, int xTo, int yTo) {
+CRook::CRook(ETeam team) :CFigure(team) {}
+bool CRook::ValidMove(std::array<std::array<CFigure*, 8>, 8> board, int xFrom, int yFrom, int xTo, int yTo) {
 	EPiece peice = board[xFrom][yFrom]->GetPiece();
 	ETeam teamm = board[xFrom][yFrom]->getTeam();
 	//Bishop validation

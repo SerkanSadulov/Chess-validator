@@ -1,6 +1,6 @@
 #include "CKing.h"
-extern std::array<std::array<CFigure*, 8>, 8> board;
-bool CKing::ValidMove(int xFrom, int yFrom, int xTo, int yTo) {
+CKing::CKing(ETeam team) :CFigure(team) {}
+bool CKing::ValidMove(std::array<std::array<CFigure*, 8>, 8> board, int xFrom, int yFrom, int xTo, int yTo) {
 	//King move validation
 	int validKingX = xFrom - xTo;
 	int  validKingY = yFrom - yTo;

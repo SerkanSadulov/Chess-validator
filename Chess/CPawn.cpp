@@ -1,7 +1,6 @@
 #include "CPawn.h"
-extern std::array<std::array<CFigure*, 8>, 8> board;
-
-bool CPawn::ValidMove(int xFrom, int yFrom, int xTo, int yTo) {
+CPawn::CPawn(ETeam team) :CFigure(team){}
+bool CPawn::ValidMove(std::array<std::array<CFigure*, 8>, 8> board, int xFrom, int yFrom, int xTo, int yTo) {
 	EPiece peice = board[xFrom][yFrom]->GetPiece();
 	ETeam teamm = board[xFrom][yFrom]->getTeam();
 	//Pawn validation

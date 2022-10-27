@@ -1,11 +1,2 @@
-﻿  CBishop.cpp
-  CFigure.cpp
-  CKing.cpp
-  CKnight.cpp
-  CPawn.cpp
-  CQueen.cpp
-  CRook.cpp
-  Chess.cpp
-  Generating Code...
-C:\Users\Serko\Desktop\Project\Github\Chess\Chess\CPawn.cpp(54): warning C4715: 'CPawn::ValidMove': not all control paths return a value
+﻿  Chess.cpp
   Chess.vcxproj -> C:\Users\Serko\Desktop\Project\Github\Chess\x64\Debug\Chess.exe
